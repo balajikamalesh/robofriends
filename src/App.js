@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, {  useEffect } from 'react';
+import { connect } from 'react-redux';
 import './App.css';
 
 import CardList from './components/cardlist';
@@ -6,25 +7,33 @@ import SearchBox from './components/searchbox';
 import Scroll from './components/scroll';
 import ErrorBoundary from './components/errorboundary';
 
-function App(){
-  const [robots, setRobots] = useState([]);
-  const [searchField, setSearchField] = useState('');
+import { requestRobots, setSearchField } from './actions';
 
+const mapStateToProps = (state) => {
+  return {
+    searchField: state.searchRobots.searchField,
+    robots: state.requestRobots.robots,
+    isPending: state.requestRobots.isPending,
+    erroe: state.requestRobots.error
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onSearchChange: (event) => dispatch(setSearchField(event.target.value)),
+    onRequestRobots: () => dispatch(requestRobots())
+  }
+}
+
+function App(props){
   useEffect(() => {
-    console.log('effect');
-    fetch('https://jsonplaceholder.typicode.com/users')
-    .then(response => response.json())
-    .then(json => setRobots(json))
+    props.onRequestRobots()
   },[]) //ComponentDidMount
 
-  const onSearchChange = (event) => {
-    setSearchField(event.target.value); 
-  }
+  const matchingRobots = (robot) => robot.name.toLowerCase().includes(props.searchField.toLowerCase());
+  const filteredRobots = props.robots.filter(matchingRobots);
 
-  const matchingRobots = (robot) => robot.name.toLowerCase().includes(searchField.toLowerCase());
-  const filteredRobots = robots.filter(matchingRobots);
-
-  if(robots.length === 0){
+  if(props.isPending === 0){
     return (
       <div className="tc">
           <h2>Loading</h2>
@@ -34,7 +43,7 @@ function App(){
     return (
       <div className="tc">
           <h1>RoboFriends</h1>
-          <SearchBox searchChange={onSearchChange}/>
+          <SearchBox searchChange={props.onSearchChange}/>
           <Scroll>
             <ErrorBoundary>
               <CardList robots={filteredRobots}/>
@@ -46,5 +55,5 @@ function App(){
   
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
