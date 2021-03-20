@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`expect to render card component 1`] = `
+<div>
+  <Card
+    email="balaji"
+    id={1}
+    key="1"
+    name="balaji"
+  />
+  <Card
+    email="kamalesh"
+    id={2}
+    key="2"
+    name="kamalesh"
+  />
+</div>
+`;

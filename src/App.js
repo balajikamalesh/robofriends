@@ -2,6 +2,7 @@ import React, {  useEffect } from 'react';
 import { connect } from 'react-redux';
 import './App.css';
 
+import Header from './components/header';
 import CardList from './components/cardlist';
 import SearchBox from './components/searchbox';
 import Scroll from './components/scroll';
@@ -27,7 +28,7 @@ const mapDispatchToProps = (dispatch) => {
 
 function App(props){
   useEffect(() => {
-    props.onRequestRobots()
+    props.onRequestRobots();
   },[]) //ComponentDidMount
 
   const matchingRobots = (robot) => robot.name.toLowerCase().includes(props.searchField.toLowerCase());
@@ -42,7 +43,7 @@ function App(props){
   } else {
     return (
       <div className="tc">
-          <h1>RoboFriends</h1>
+          <Header/>
           <SearchBox searchChange={props.onSearchChange}/>
           <Scroll>
             <ErrorBoundary>
