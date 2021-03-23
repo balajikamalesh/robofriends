@@ -10,28 +10,34 @@ import ErrorBoundary from './components/errorboundary';
 
 import { requestRobots, setSearchField } from './actions';
 
-const mapStateToProps = (state) => {
+export interface robot {
+  id: string;
+  name: string;
+  email: string
+}
+
+const mapStateToProps = (state: any) => {
   return {
     searchField: state.searchRobots.searchField,
     robots: state.requestRobots.robots,
     isPending: state.requestRobots.isPending,
-    erroe: state.requestRobots.error
+    error: state.requestRobots.error
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    onSearchChange: (event) => dispatch(setSearchField(event.target.value)),
+    onSearchChange: (event: any) => dispatch(setSearchField(event.target.value)),
     onRequestRobots: () => dispatch(requestRobots())
   }
 }
 
-function App(props){
+function App(props: any){
   useEffect(() => {
     props.onRequestRobots();
   },[]) //ComponentDidMount
 
-  const matchingRobots = (robot) => robot.name.toLowerCase().includes(props.searchField.toLowerCase());
+  const matchingRobots = (robot: robot) => robot.name.toLowerCase().includes(props.searchField.toLowerCase());
   const filteredRobots = props.robots.filter(matchingRobots);
 
   if(props.isPending === 0){
